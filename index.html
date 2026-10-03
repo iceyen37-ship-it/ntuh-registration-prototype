@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台大醫院掛號流程重新設計原型（研究用）</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: #e9e6f2;
+    margin: 0;
+    color: #123a5c;
+  }
+
+  .topnav {
+    background: #123a5c;
+    color: #f4f1ea;
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topnav .brand { display: flex; align-items: center; gap: 10px; }
+  .topnav .brand .logo { width: 34px; height: 34px; border-radius: 10px; background: rgba(244,241,234,0.15); display: flex; align-items: center; justify-content: center; }
+  .topnav .brand .logo i { font-size: 18px; }
+  .topnav .brand p { font-size: 16px; font-weight: 500; margin: 0; }
+  .topnav nav { display: flex; gap: 28px; }
+  .topnav nav a { color: #dfe6f0; font-size: 13px; text-decoration: none; cursor: pointer; }
+  .topnav nav a:hover { color: #f4f1ea; }
+  .topnav .right { display: flex; align-items: center; gap: 14px; }
+  .topnav select { background: transparent; color: #f4f1ea; border: 0.5px solid rgba(244,241,234,0.4); border-radius: 8px; height: 34px; font-size: 12px; padding: 0 10px; }
+  .topnav .icon-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(244,241,234,0.12); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .topnav .icon-btn i { font-size: 16px; }
+  .lang-toggle { display: flex; background: rgba(244,241,234,0.12); border-radius: 8px; overflow: hidden; }
+  .lang-toggle button { background: transparent; border: none; color: #dfe6f0; font-size: 12px; padding: 8px 12px; cursor: pointer; }
+  .lang-toggle button.active { background: #f4f1ea; color: #123a5c; font-weight: 500; }
+
+  .page { max-width: 1120px; margin: 0 auto; padding: 32px 40px 60px; }
+
+  .hero {
+    background: #123a5c;
+    border-radius: 24px;
+    padding: 32px 36px;
+    color: #f4f1ea;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+  .hero .left { flex: 1; }
+  .hero h1 { font-size: 24px; font-weight: 500; margin: 0 0 8px; }
+  .hero p { font-size: 13px; color: #b9cbe0; margin: 0 0 18px; max-width: 480px; }
+  .search-bar { display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 14px; padding: 10px 16px; max-width: 420px; }
+  .search-bar i.leading { font-size: 16px; color: #6d7180; }
+  .search-bar input { flex: 1; border: none; height: 22px; font-size: 13px; background: transparent; outline: none; color: #123a5c; }
+  .search-bar button { background: #123a5c; color: #f4f1ea; border: none; height: 30px; padding: 0 16px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+
+  .progress-panel { background: rgba(244,241,234,0.08); border-radius: 16px; padding: 18px 20px; min-width: 260px; }
+  .progress-panel p.label { font-size: 12px; margin: 0 0 4px; color: #b9cbe0; }
+  .progress-panel p.value { font-size: 16px; font-weight: 500; margin: 0 0 12px; }
+  .progress-row { display: flex; gap: 8px; }
+  .progress-row select { flex: 1; background: #fff; border: none; height: 32px; font-size: 12px; border-radius: 8px; padding: 0 8px; }
+  .progress-row button { background: #dfe6f0; color: #123a5c; border: none; padding: 0 14px; font-size: 12px; border-radius: 8px; cursor: pointer; }
+
+  .section-title { font-size: 17px; font-weight: 500; color: #123a5c; margin: 0 0 14px; }
+
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .tile { background: #fff; border-radius: 16px; padding: 20px; cursor: pointer; transition: transform 0.15s; }
+  .tile:hover { transform: translateY(-2px); }
+  .tile.accent { background: #123a5c; color: #f4f1ea; }
+  .tile i.icon { font-size: 24px; color: #123a5c; }
+  .tile.accent i.icon { color: #f4f1ea; }
+  .tile p.title { font-size: 14px; font-weight: 500; margin: 14px 0 4px; color: #123a5c; }
+  .tile.accent p.title { color: #f4f1ea; }
+  .tile p.sub { font-size: 12px; color: #6d7180; margin: 0 0 16px; line-height: 1.5; }
+  .tile.accent p.sub { color: #b9cbe0; }
+  .go-btn { width: 30px; height: 30px; border-radius: 50%; background: #123a5c; display: flex; align-items: center; justify-content: center; }
+  .go-btn i { font-size: 14px; color: #f4f1ea; }
+  .tile.accent .go-btn { background: #dfe6f0; }
+  .tile.accent .go-btn i { color: #123a5c; }
+
+  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+
+  .cancel-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 32px; }
+  .cancel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 14px; }
+  .cancel-grid label { font-size: 12px; color: #6d7180; display: block; margin-bottom: 6px; }
+  .cancel-grid select, .cancel-grid input { width: 100%; height: 36px; border: 0.5px solid #d8d5c9; border-radius: 8px; padding: 0 10px; font-size: 13px; background: #f4f1ea; }
+  .cancel-btn { margin-top: 16px; background: #123a5c; color: #f4f1ea; border: none; height: 40px; padding: 0 24px; border-radius: 10px; font-size: 13px; cursor: pointer; }
+
+  .list-card { background: #fff; border-radius: 16px; padding: 6px 8px; }
+  .list-row { display: flex; align-items: center; gap: 12px; padding: 14px 12px; cursor: pointer; }
+  .list-row + .list-row { border-top: 0.5px solid #eee; }
+  .list-row i.leading { font-size: 20px; color: #123a5c; }
+  .list-row p { font-size: 13px; margin: 0; flex: 1; color: #123a5c; }
+  .list-row i.trailing { font-size: 14px; color: #6d7180; }
+
+  .monthcard { background: #fff; border-radius: 16px; padding: 20px; }
+  .month-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .month-btns button { flex: 1; height: 36px; border-radius: 8px; border: 0.5px solid #d8d5c9; background: transparent; font-size: 12px; cursor: pointer; color: #123a5c; }
+  .month-btns button.selected { background: #123a5c; color: #f4f1ea; border: none; }
+
+  footer { text-align: center; font-size: 11px; color: #6d7180; padding: 20px 0 40px; }
+
+</style>
+</head>
+<body>
+<div style="background:#fff4d6;color:#4a3a00;border-bottom:1px solid #e8d48a;padding:10px 16px;font-size:14px;line-height:1.5;text-align:center;font-family:system-ui,sans-serif">
+  <strong>研究原型・Research prototype</strong>：這是針對台大醫院網路掛號系統所做的獨立使用者研究與重新設計概念，<strong>不是官方網站，無法實際掛號</strong>，請勿輸入真實個人資料。
+  This is an independent UX redesign concept, not NTUH's official site. It cannot book appointments; please don't enter real personal data.
+  <a href="https://ditldesign.ghost.io/" target="_blank" rel="noopener" style="color:#4a3a00">研究文章 Research write-up ↗</a>
+</div>
+
+<div class="topnav">
+  <div class="brand">
+    <div class="logo"><i class="ti ti-heart-rate-monitor"></i></div>
+    <p data-i18n="brandName">掛號流程重新設計原型</p>
+  </div>
+  <nav>
+    <a data-i18n="navDept">依科別掛號</a>
+    <a data-i18n="navDisease">依病症掛號</a>
+    <a data-i18n="navDoctor">依醫事人員掛號</a>
+    <a data-i18n="navProgress">看診進度查詢</a>
+    <a data-i18n="navCancel">查詢/取消掛號</a>
+  </nav>
+  <div class="right">
+    <select id="branchSelect">
+      <option data-i18n="branch0">總院</option>
+      <option data-i18n="branch1">兒童醫院</option>
+      <option data-i18n="branch2">北護分院</option>
+      <option data-i18n="branch3">癌醫中心分院</option>
+      <option data-i18n="branch4">金山分院</option>
+      <option data-i18n="branch5">新竹分院（新竹醫院）</option>
+      <option data-i18n="branch6">新竹分院生醫醫院（含竹東）</option>
+      <option data-i18n="branch7">雲林分院</option>
+    </select>
+    <div class="icon-btn"><i class="ti ti-bell"></i></div>
+    <div class="icon-btn"><i class="ti ti-user"></i></div>
+    <div class="lang-toggle">
+      <button id="btnZh" class="active" onclick="setLang('zh')">中</button>
+      <button id="btnEn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="left">
+      <h1 data-i18n="heroTitle">找到適合您的科別與醫師</h1>
+      <p data-i18n="heroSub">總院看診時間：上午 09:00-12:00、下午 13:30-16:30。網路掛號開放時間為門診前兩週 00:00 起，額滿為止。</p>
+      <div class="search-bar">
+        <i class="ti ti-search leading"></i>
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="搜尋科別、醫師或病症">
+        <button data-i18n="searchBtn">搜尋</button>
+      </div>
+    </div>
+    <div class="progress-panel">
+      <p class="label" data-i18n="progressLabel">今日看診進度</p>
+      <p class="value" data-i18n="progressValue">內科 陳醫師 · 現看號 42</p>
+      <div class="progress-row">
+        <select>
+          <option data-i18n="deptInternal">內科</option>
+          <option data-i18n="deptSurgery">外科</option>
+          <option data-i18n="deptDerm">皮膚科</option>
+        </select>
+        <button data-i18n="queryBtn">查詢</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" data-i18n="sectionOnline">線上掛號</p>
+  <div class="grid4">
+    <a class="tile accent" href="ntuh_page_first_visit.html" style="text-decoration:none; display:block;">
+      <i class="ti ti-file-description icon"></i>
+      <p class="title" data-i18n="tile4Title">初診資料填寫</p>
+      <p class="sub" data-i18n="tile4Sub">從未至本院就診者請先填寫基本資料</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </a>
+    <a class="tile" href="ntuh_page_ai_consult.html" style="text-decoration:none; display:block;">
+      <i class="ti ti-stethoscope icon"></i>
+      <p class="title" data-i18n="tile2Title">AI 病症諮詢</p>
+      <p class="sub" data-i18n="tile2Sub">與 AI 對話描述症狀，協助判斷合適科別</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </a>
+    <a class="tile" href="ntuh_page_by_dept.html" style="text-decoration:none; display:block;">
+      <i class="ti ti-category-2 icon"></i>
+      <p class="title" data-i18n="tile1Title">依科別掛號</p>
+      <p class="sub" data-i18n="tile1Sub">內科系 / 外科系 / 兒童醫院 / 其他科系 / 特色門診</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </a>
+    <a class="tile" href="ntuh_page_by_doctor.html" style="text-decoration:none; display:block;">
+      <i class="ti ti-user-search icon"></i>
+      <p class="title" data-i18n="tile3Title">依醫事人員掛號</p>
+      <p class="sub" data-i18n="tile3Sub">輸入醫師姓名直接掛號</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </a>
+  </div>
+
+  <p class="section-title" data-i18n="sectionCancel">取消掛號</p>
+  <p style="font-size:12px; margin:-8px 0 12px;"><a href="ntuh_page_cancel.html" style="color:#123a5c;">前往完整取消掛號頁面 →</a></p>
+  <div class="cancel-card">
+    <p style="font-size:13px; color:#6d7180; margin:0;" data-i18n="cancelDesc">上午門診最遲於當日 9:30 前、下午門診最遲於當日 14:00 前可取消掛號。</p>
+    <div class="cancel-grid">
+      <div>
+        <label data-i18n="cancelIdType">選擇證件類型</label>
+        <select>
+          <option data-i18n="idType1">身分證</option>
+          <option data-i18n="idType2">居留證</option>
+          <option data-i18n="idType3">護照</option>
+        </select>
+      </div>
+      <div>
+        <label data-i18n="cancelIdNumber">輸入證件號碼</label>
+        <input type="text" data-i18n-placeholder="cancelIdPlaceholder" placeholder="示意用，請勿輸入真實證號">
+      </div>
+      <div>
+        <label data-i18n="cancelBirth">輸入生日日期</label>
+        <input type="date">
+      </div>
+      <div>
+        <label data-i18n="cancelCaptcha">驗證碼</label>
+        <input type="text" data-i18n-placeholder="cancelCaptchaPlaceholder" placeholder="輸入驗證碼">
+      </div>
+    </div>
+    <button class="cancel-btn" data-i18n="cancelSubmit">取消掛號</button>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <p class="section-title" data-i18n="sectionOther">其他服務</p>
+      <div class="list-card">
+        <div class="list-row">
+          <i class="ti ti-activity leading"></i>
+          <p data-i18n="row1">當日看診進度查詢</p>
+          <i class="ti ti-chevron-right trailing"></i>
+        </div>
+        <div class="list-row">
+          <i class="ti ti-calendar-x leading"></i>
+          <p data-i18n="row2">查詢（取消）掛號</p>
+          <i class="ti ti-chevron-right trailing"></i>
+        </div>
+        <div class="list-row">
+          <i class="ti ti-calendar-off leading"></i>
+          <p data-i18n="row3">醫事人員請假查詢</p>
+          <i class="ti ti-chevron-right trailing"></i>
+        </div>
+        <div class="list-row">
+          <i class="ti ti-vaccine leading"></i>
+          <p data-i18n="row4">疫苗相關門診</p>
+          <i class="ti ti-chevron-right trailing"></i>
+        </div>
+        <div class="list-row">
+          <i class="ti ti-route leading"></i>
+          <p data-i18n="row5">本院就醫流程</p>
+          <i class="ti ti-chevron-right trailing"></i>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="section-title" data-i18n="sectionSchedule">查看門診表</p>
+      <div class="monthcard">
+        <p style="font-size:13px; color:#6d7180; margin:0;" data-i18n="scheduleDesc">下載或查看各科部門診時刻表</p>
+        <div class="month-btns">
+          <button data-i18n="prevMonth">← 上個月</button>
+          <button class="selected" data-i18n="thisMonth">當月</button>
+          <button data-i18n="nextMonth">下個月 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer data-i18n="footer">獨立使用者研究原型，與國立臺灣大學醫學院附設醫院無關。所有資料皆為示意，不會傳送或儲存任何資訊。</footer>
+
+</div>
+
+<script>
+const i18n = {
+  zh: {
+    brandName: "掛號流程重新設計原型",
+    navDept: "依科別掛號",
+    navDisease: "依病症掛號",
+    navDoctor: "依醫事人員掛號",
+    navProgress: "看診進度查詢",
+    navCancel: "查詢/取消掛號",
+    branch0: "總院", branch1: "兒童醫院", branch2: "北護分院", branch3: "癌醫中心分院",
+    branch4: "金山分院", branch5: "新竹分院（新竹醫院）", branch6: "新竹分院生醫醫院（含竹東）", branch7: "雲林分院",
+    heroTitle: "找到適合您的科別與醫師",
+    heroSub: "總院看診時間：上午 09:00-12:00、下午 13:30-16:30。網路掛號開放時間為門診前兩週 00:00 起，額滿為止。",
+    searchPlaceholder: "搜尋科別、醫師或病症",
+    searchBtn: "搜尋",
+    progressLabel: "今日看診進度",
+    progressValue: "內科 陳醫師 · 現看號 42",
+    deptInternal: "內科", deptSurgery: "外科", deptDerm: "皮膚科",
+    queryBtn: "查詢",
+    sectionOnline: "線上掛號",
+    tile1Title: "依科別掛號", tile1Sub: "內科系 / 外科系 / 兒童醫院 / 其他科系 / 特色門診",
+    tile2Title: "AI 病症諮詢", tile2Sub: "與 AI 對話描述症狀，協助判斷合適科別",
+    tile3Title: "依醫事人員掛號", tile3Sub: "輸入醫師姓名直接掛號",
+    tile4Title: "初診資料填寫", tile4Sub: "從未至本院就診者請先填寫基本資料",
+    sectionCancel: "取消掛號",
+    cancelDesc: "上午門診最遲於當日 9:30 前、下午門診最遲於當日 14:00 前可取消掛號。",
+    cancelIdType: "選擇證件類型", idType1: "身分證", idType2: "居留證", idType3: "護照",
+    cancelIdNumber: "輸入證件號碼", cancelIdPlaceholder: "示意用，請勿輸入真實證號",
+    cancelBirth: "輸入生日日期",
+    cancelCaptcha: "驗證碼", cancelCaptchaPlaceholder: "輸入驗證碼",
+    cancelSubmit: "取消掛號",
+    sectionOther: "其他服務",
+    row1: "當日看診進度查詢", row2: "查詢（取消）掛號", row3: "醫事人員請假查詢", row4: "疫苗相關門診", row5: "本院就醫流程",
+    sectionSchedule: "查看門診表",
+    scheduleDesc: "下載或查看各科部門診時刻表",
+    prevMonth: "← 上個月", thisMonth: "當月", nextMonth: "下個月 →",
+    footer: "獨立使用者研究原型，與國立臺灣大學醫學院附設醫院無關。所有資料皆為示意，不會傳送或儲存任何資訊。",
+    chatName: "AI 病症諮詢", chatStatus: "線上為您服務",
+    chatMsg1: "您好，我是台大醫院 AI 病症諮詢助理。請簡單描述您目前的不適症狀，我會協助建議合適的科別。",
+    quick1: "頭痛 / 發燒", quick2: "腹痛", quick3: "皮膚紅疹", quick4: "咳嗽 / 喉嚨痛",
+    chatPlaceholder: "請描述您的症狀…",
+    chatReplyGeneric: "了解，根據您描述的症狀，建議您可以掛「家庭醫學部」做初步評估，或直接為您帶到相關科別掛號頁面。",
+    chatBtnGoDept: "前往掛號"
+  },
+  en: {
+    brandName: "Registration Redesign Prototype",
+    navDept: "By department",
+    navDisease: "By symptom",
+    navDoctor: "By physician",
+    navProgress: "Queue status",
+    navCancel: "Check / cancel booking",
+    branch0: "Main hospital", branch1: "Children's hospital", branch2: "Beihu branch", branch3: "Cancer center branch",
+    branch4: "Jinshan branch", branch5: "Hsinchu branch (Hsinchu hospital)", branch6: "Hsinchu branch biomedical hospital (incl. Zhudong)", branch7: "Yunlin branch",
+    heroTitle: "Find the right department and doctor",
+    heroSub: "Main hospital hours: 09:00-12:00 morning, 13:30-16:30 afternoon. Online booking opens two weeks before your visit, first come first served.",
+    searchPlaceholder: "Search department, doctor, or symptom",
+    searchBtn: "Search",
+    progressLabel: "Today's queue status",
+    progressValue: "Internal medicine, Dr. Chen · Now serving 42",
+    deptInternal: "Internal medicine", deptSurgery: "Surgery", deptDerm: "Dermatology",
+    queryBtn: "Check",
+    sectionOnline: "Online booking",
+    tile1Title: "By department", tile1Sub: "Internal medicine / surgery / children's hospital / other / specialty clinics",
+    tile2Title: "AI symptom consultation", tile2Sub: "Chat with AI about your symptoms to find the right department",
+    tile3Title: "By physician", tile3Sub: "Book directly by entering a doctor's name",
+    tile4Title: "First-visit registration", tile4Sub: "New patients please complete basic information first",
+    sectionCancel: "Cancel booking",
+    cancelDesc: "Cancel by 9:30 for morning clinics, or by 14:00 for afternoon clinics on the visit day.",
+    cancelIdType: "ID type", idType1: "National ID", idType2: "Resident permit", idType3: "Passport",
+    cancelIdNumber: "ID number", cancelIdPlaceholder: "Demo only, do not enter a real ID",
+    cancelBirth: "Date of birth",
+    cancelCaptcha: "Captcha", cancelCaptchaPlaceholder: "Enter captcha",
+    cancelSubmit: "Cancel booking",
+    sectionOther: "Other services",
+    row1: "Today's queue status", row2: "Check / cancel booking", row3: "Physician leave inquiry", row4: "Vaccine clinics", row5: "Visit guide",
+    sectionSchedule: "Clinic schedule",
+    scheduleDesc: "View or download the clinic schedule by department",
+    prevMonth: "← Previous month", thisMonth: "This month", nextMonth: "Next month →",
+    footer: "Independent UX research prototype. Not affiliated with National Taiwan University Hospital. All content is sample data; nothing you enter is sent or stored.",
+    chatName: "AI symptom consultation", chatStatus: "Online now",
+    chatMsg1: "Hi, I'm NTUH's AI symptom consultation assistant. Briefly describe how you're feeling and I'll suggest the right department.",
+    quick1: "Headache / fever", quick2: "Abdominal pain", quick3: "Skin rash", quick4: "Cough / sore throat",
+    chatPlaceholder: "Describe your symptoms…",
+    chatReplyGeneric: "Got it. Based on what you described, we'd suggest booking Family Medicine for an initial assessment, or I can take you to the matching department.",
+    chatBtnGoDept: "Go to booking"
+  }
+};
+
+let currentLang = "zh";
+
+function setLang(lang) {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (i18n[lang][key] !== undefined) el.setAttribute("placeholder", i18n[lang][key]);
+  });
+  document.getElementById("btnZh").classList.toggle("active", lang === "zh");
+  document.getElementById("btnEn").classList.toggle("active", lang === "en");
+  document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
+  currentLang = lang;
+}
+
+</script>
+</body>
+</html>
