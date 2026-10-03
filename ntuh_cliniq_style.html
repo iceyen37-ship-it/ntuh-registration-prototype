@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台大醫院掛號系統 - CliniQ 風格首頁</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: #e9e6f2;
+    margin: 0;
+    padding: 30px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    max-width: 390px;
+    width: 100%;
+    background: #f4f1ea;
+    border-radius: 28px;
+    padding: 20px;
+  }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand .logo { width: 34px; height: 34px; border-radius: 10px; background: #123a5c; display: flex; align-items: center; justify-content: center; }
+  .brand .logo i { color: #f4f1ea; font-size: 18px; }
+  .brand-name { font-weight: 500; font-size: 14px; margin: 0; color: #123a5c; }
+  .branch-select { font-size: 11px; margin: 0; color: #6d7180; border: none; background: transparent; padding: 0; }
+  .icon-btn { width: 34px; height: 34px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; margin-left: 8px; cursor: pointer; }
+  .icon-btn i { font-size: 16px; color: #123a5c; }
+
+  .progress-card { background: #123a5c; border-radius: 20px; padding: 16px; margin-bottom: 16px; color: #f4f1ea; }
+  .progress-card p.label { font-size: 13px; margin: 0 0 4px; color: #b9cbe0; }
+  .progress-card p.value { font-size: 17px; font-weight: 500; margin: 0 0 10px; }
+  .progress-row { display: flex; gap: 8px; }
+  .progress-row select { flex: 1; background: #fff; border: none; height: 32px; font-size: 12px; border-radius: 8px; padding: 0 8px; }
+  .progress-row button { background: #dfe6f0; color: #123a5c; border: none; padding: 0 14px; font-size: 12px; border-radius: 8px; cursor: pointer; }
+
+  .search-bar { display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 14px; padding: 10px 14px; margin-bottom: 18px; }
+  .search-bar i.leading { font-size: 16px; color: #6d7180; }
+  .search-bar input { flex: 1; border: none; height: 20px; font-size: 13px; background: transparent; outline: none; }
+  .search-bar i.trailing { font-size: 16px; color: #123a5c; }
+
+  .section-title { font-size: 15px; font-weight: 500; color: #123a5c; margin: 0 0 10px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .tile { background: #fff; border-radius: 16px; padding: 14px; cursor: pointer; }
+  .tile.accent { background: #123a5c; color: #f4f1ea; }
+  .tile i.icon { font-size: 20px; color: #123a5c; }
+  .tile.accent i.icon { color: #f4f1ea; }
+  .tile p.title { font-size: 13px; font-weight: 500; margin: 10px 0 2px; color: #123a5c; }
+  .tile.accent p.title { color: #f4f1ea; }
+  .tile p.sub { font-size: 11px; color: #6d7180; margin: 0 0 10px; }
+  .tile.accent p.sub { color: #b9cbe0; }
+  .go-btn { width: 26px; height: 26px; border-radius: 50%; background: #123a5c; display: flex; align-items: center; justify-content: center; }
+  .go-btn i { font-size: 13px; color: #f4f1ea; }
+  .tile.accent .go-btn { background: #dfe6f0; }
+  .tile.accent .go-btn i { color: #123a5c; }
+
+  .list-card { background: #fff; border-radius: 16px; padding: 6px 4px; margin-bottom: 16px; }
+  .list-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer; }
+  .list-row + .list-row { border-top: 0.5px solid #eee; }
+  .list-row i.leading { font-size: 18px; color: #123a5c; }
+  .list-row p { font-size: 13px; margin: 0; flex: 1; color: #123a5c; }
+  .list-row i.trailing { font-size: 14px; color: #6d7180; }
+
+  .cta { width: 100%; background: #123a5c; color: #f4f1ea; border: none; height: 46px; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .cta:hover { background: #0d2c46; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"><i class="ti ti-heart-rate-monitor"></i></div>
+      <div>
+        <p class="brand-name">台大醫院</p>
+        <select class="branch-select">
+          <option>總院</option>
+          <option>兒童醫院</option>
+          <option>北護分院</option>
+          <option>癌醫中心分院</option>
+          <option>金山分院</option>
+          <option>新竹分院（新竹醫院）</option>
+          <option>新竹分院生醫醫院（含竹東）</option>
+          <option>雲林分院</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;">
+      <div class="icon-btn"><i class="ti ti-bell"></i></div>
+      <div class="icon-btn"><i class="ti ti-user"></i></div>
+    </div>
+  </div>
+
+  <div class="progress-card">
+    <p class="label">今日看診進度</p>
+    <p class="value">內科 陳醫師 · 現看號 42</p>
+    <div class="progress-row">
+      <select><option>內科</option><option>外科</option><option>皮膚科</option></select>
+      <button>查詢</button>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <i class="ti ti-search leading"></i>
+    <input type="text" placeholder="搜尋科別、醫師或病症">
+    <i class="ti ti-adjustments-horizontal trailing"></i>
+  </div>
+
+  <p class="section-title">線上掛號</p>
+  <div class="grid2">
+    <div class="tile">
+      <i class="ti ti-category-2 icon"></i>
+      <p class="title">依科別掛號</p>
+      <p class="sub">內科系 / 外科系 / 特色門診</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </div>
+    <div class="tile">
+      <i class="ti ti-stethoscope icon"></i>
+      <p class="title">依病症掛號</p>
+      <p class="sub">AI 協助判斷科別</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </div>
+    <div class="tile">
+      <i class="ti ti-user-search icon"></i>
+      <p class="title">依醫事人員掛號</p>
+      <p class="sub">指定醫師搜尋</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </div>
+    <div class="tile accent">
+      <i class="ti ti-file-description icon"></i>
+      <p class="title">初診資料填寫</p>
+      <p class="sub">首次就診必填</p>
+      <div class="go-btn"><i class="ti ti-arrow-up-right"></i></div>
+    </div>
+  </div>
+
+  <p class="section-title">其他服務</p>
+  <div class="list-card">
+    <div class="list-row">
+      <i class="ti ti-calendar-x leading"></i>
+      <p>查詢 / 取消掛號</p>
+      <i class="ti ti-chevron-right trailing"></i>
+    </div>
+    <div class="list-row">
+      <i class="ti ti-table leading"></i>
+      <p>查看門診表（上月 / 本月 / 下月）</p>
+      <i class="ti ti-chevron-right trailing"></i>
+    </div>
+    <div class="list-row">
+      <i class="ti ti-calendar-off leading"></i>
+      <p>醫事人員請假查詢</p>
+      <i class="ti ti-chevron-right trailing"></i>
+    </div>
+  </div>
+
+  <button class="cta">前往掛號</button>
+
+</div>
+</body>
+</html>
